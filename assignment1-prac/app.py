@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from static.resources import dict_map,reverse_map,idx
 app = Flask(__name__)
 
