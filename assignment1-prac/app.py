@@ -31,11 +31,13 @@ def get_id(id):
     return build_result(301, dict_map[int(id)])
 
 
-@app.route('/<id>/<url>', methods=['PUT'])
-def put_id_url(id,url):
+@app.route('/<id>', methods=['PUT'])
+def put_id_url(id):
     #generate
     if int(id) not in dict_map.keys(): # this id doesn't exist
         return build_result(404,"")
+    request_data = request.get_json()
+    url = request_data['url']
     if url in reverse_map.keys(): # the given url exists
         return build_result(400,"error")
     dict_map[int(id)]=url
