@@ -1,7 +1,11 @@
 
 import unittest
+
+import static
+
 import utils
 import app
+import authentication
 
 class Test(unittest.TestCase):
 
@@ -16,11 +20,17 @@ class Test(unittest.TestCase):
     def test_generate_id(self):
         print(utils.generate_unique_id())
 
-    def test_check_map(self):
-        print(app.check_map())
 
-    def test_check_reversemap(self):
-        print(app.check_reversemap())
+    def test_create_token(self):
+        username="zlx"
+        password="123456"
+        print(authentication.create_token(username,password))
+    def test_implement_login(self):
+        username = "zlx"
+        password = "123456"
+        token =authentication.create_token(username,password)
+        print({"username":username,"token":token})
+        #print(authentication.implement_login(username,password))
 
 
 
