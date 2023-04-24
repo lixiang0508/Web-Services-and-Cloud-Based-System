@@ -84,43 +84,41 @@ def change_password():  # users change their password
 def base64url_encode(input: bytes):
     return base64.urlsafe_b64encode(input).decode('utf-8').replace('=', '')
 
-def create_token(username, password):
-    # construct payload
-    '''payload = {
-        'username': username,
-        'password': password,  # customized ID
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7)  # expiration date
-    }
-    result = jwt.encode(payload=payload, key=SALT, algorithm="HS256", headers=headers)  # generate a token using jwt
-    return result'''
-
-
+def create_token(username, password):    
     segments = []
-    exp = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-    exp = int(exp.timestamp())
-    api_sec = SALT
+    
+    exp = datetime.datetime.utcnow() + datetime.timedelta(days=7) #current time + 7days
+    exp = int(exp.timestamp()) #get expiration date
+   
+    api_sec = SALT #salt for hash
+    
+    #construct payload
     payload = {
         'username': username,
         'password': password,  # customized ID
         'exp': exp  # expiration date
     }
 
+    #construct header
     header = {"typ": "JWT", "alg": "HS256"}
 
     print(payload)
 
+    #encode(base64) payload and header
     json_header = json.dumps(header, separators=(",", ":")).encode('utf-8')
     json_payload = json.dumps(payload, separators=(",", ":")).encode('utf-8')
-
     segments.append(base64url_encode(json_header))
     segments.append(base64url_encode(json_payload))
 
+    #generate signature by hashing header+payload
     signing_input = ".".join(segments).encode()
     key = api_sec.encode()
     signature = hmac.new(key, signing_input, hashlib.sha256).digest()
 
+    #encode(base64) signature
     segments.append(base64url_encode(signature))
 
+    #'.'joint encoded header, payload, signature
     encoded_string = ".".join(segments)
 
     return encoded_string
