@@ -1,4 +1,5 @@
 The group assignment 2 of Web services and Cloud-Based System UvA https://github.com/lixiang0508/Web-Services-and-Cloud-Based-System
+JWT implementation refers to https://stackoverflow.com/questions/68274543/python-manually-create-jwt-token-without-library.
 
 Set up:
 
