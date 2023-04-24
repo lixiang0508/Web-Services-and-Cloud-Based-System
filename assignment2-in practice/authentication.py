@@ -146,21 +146,19 @@ def decode_token(token):
         return 'Invalid token' '''
 
     def base64url_decode(input: str):
+        #padding binary = to make input length be a multiple of 4
         padding = b'=' * (4 - (len(input) % 4))
         return base64.urlsafe_b64decode(input.encode() + padding)
 
     try:
-        # split the token into its three segments
+        # split the token into its three segments(like how it is created)
         header_b64, payload_b64, signature_b64 = token.split('.')
 
-        # decode the header and payload segments
-        # header = json.loads(base64url_decode(header_b64))
+        # decode the payload segment
         payload = json.loads(base64url_decode(payload_b64))
 
-        # extract the expiration timestamp from the payload
+        # extract the expiration timestamp
         exp_timestamp = payload['exp']
-
-        # convert the expiration timestamp to a datetime object
         nowstamp = int(datetime.datetime.utcnow().timestamp())
 
         # check if the token has expired
@@ -177,7 +175,6 @@ def decode_token(token):
         if signature_b64 != signature_b64_calculated:
             return 'Invalid token signature'
 
-        # return the decoded payload data
         return payload
 
     except (ValueError, json.JSONDecodeError):
