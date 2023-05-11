@@ -1,0 +1,5 @@
+flask==2.0.2
+flask-cors
+PyJWT
+redis==4.5.4
+

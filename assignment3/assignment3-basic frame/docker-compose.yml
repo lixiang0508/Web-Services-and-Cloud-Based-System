@@ -1,0 +1,36 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+  app:
+    build: ./app
+    ports:
+      - "4000:5000"
+    logging:
+      driver: "json-file"
+      options:
+          max-size: "10m"
+          max-file: "5"
+    volumes:
+      - app_data:/app/data
+    depends_on:
+      - redis
+  authentication:
+    build: ./authentication
+    ports:
+      - "4002:5002"
+    volumes:
+      - auth_data:/app/data
+    depends_on:
+      - redis
+
+volumes:
+  app_data:
+  auth_data:
+  redis_data:
