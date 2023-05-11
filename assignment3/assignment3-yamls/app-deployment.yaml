@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app
+  name: app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app : app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - image: zlx980508/ass3-app:v5
+          imagePullPolicy: IfNotPresent
+          name: app
+          env:
+            - name: SALT
+              valueFrom:
+                secretKeyRef :
+                  name: secretjwt
+                  key: salt
+          ports:
+            - containerPort: 5000
+              name: app-port
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/data
+              name: pvc-app
+            #- mountPath: /app/config
+              #name: cmapp
+      restartPolicy: Always
+      volumes:
+        #- name: cmapp
+          #configMap:
+            #name: app-cm
+        - name: pvc-app
+          persistentVolumeClaim:
+            claimName: app-pv
+

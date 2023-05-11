@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: authentication
+  name: authentication
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app : authentication
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: authentication
+    spec:
+      containers:
+        - image: zlx980508/ass3-authentication:v5
+          imagePullPolicy: IfNotPresent
+          name: app
+          env:
+            - name: SALT
+              valueFrom:
+                secretKeyRef :
+                  name: secretjwt
+                  key: salt
+          ports:
+            - containerPort: 5002
+              name: authen-port
+          resources: {}
+          volumeMounts:
+            - mountPath: /authentication/data
+              name: pvc-authentication
+            #- mountPath: /authentication/config
+              #name: cmauthentication
+      restartPolicy: Always
+      volumes:
+        #- name: cmauthentication
+          #configMap:
+            #name: authentication-cm
+        - name: pvc-authentication
+          persistentVolumeClaim:
+            claimName: authentication-pv

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:latest
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-persistent-storage
+          mountPath: /var/lib/redis
+        - name: redis-config-volume
+          mountPath: /usr/local/etc/redis/redis.conf
+          subPath: redis.conf
+        command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+      volumes:
+      - name: redis-persistent-storage
+        persistentVolumeClaim:
+          claimName: redis-pv-claim
+      - name: redis-config-volume
+        configMap:
+          name: redis-config
