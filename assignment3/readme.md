@@ -7,7 +7,7 @@ For assignment 3.1:
 
 3 Send request from postman, for the url-shorten service the urls start with http://localhost:4000 and for the authentication service the urls start with http://localhost:4002
 
-For assignment 3,2:
+For assignment 3.2:
 
 1 For all the yaml files ,kubectl apply -f <filename>.yaml
   
